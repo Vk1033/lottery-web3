@@ -18,7 +18,7 @@ contract RaffleTest is Test {
     uint32 callbackGasLimit;
 
     address public PLAYER = makeAddr("player");
-    uint256 public constant STARING_PLAYER_BALANCE = 10 ether;
+    uint256 public constant STARTING_PLAYER_BALANCE = 10 ether;
 
     event RaffleEntered(address indexed player);
     event WinnerPicked(address indexed winner);
@@ -35,14 +35,14 @@ contract RaffleTest is Test {
         subscriptionId = config.subscriptionId;
         callbackGasLimit = config.callbackGasLimit;
 
-        vm.deal(PLAYER, STARING_PLAYER_BALANCE);
+        vm.deal(PLAYER, STARTING_PLAYER_BALANCE);
     }
 
     function testRaffleInitializesInOpenState() public view {
         assertEq(uint256(raffle.getRaffleState()), uint256(Raffle.RaffleState.OPEN));
     }
 
-    function testRaffleRevertsWhenYouDontPayEnought() public {
+    function testRaffleRevertsWhenYouDontPayEnough() public {
         vm.prank(PLAYER);
         vm.expectRevert(Raffle.Raffle__NotEnoughEth.selector);
         raffle.enterRaffle{value: 0}();

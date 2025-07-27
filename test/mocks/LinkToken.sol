@@ -23,7 +23,7 @@ contract LinkToken is ERC20 {
     event Transfer(address indexed from, address indexed to, uint256 value, bytes data);
 
     /**
-     * @dev transfer token to a contract address with additional data if the recipient is a contact.
+     * @dev transfer token to a contract address with additional data if the recipient is a contract.
      * @param _to The address to transfer to.
      * @param _value The amount to be transferred.
      * @param _data The extra data to be passed to the receiving contract.
