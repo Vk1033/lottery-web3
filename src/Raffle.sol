@@ -11,9 +11,9 @@ import {VRFConsumerBaseV2Plus} from "@chainlink/contracts/src/v0.8/vrf/dev/VRFCo
 import {VRFV2PlusClient} from "@chainlink/contracts/src/v0.8/vrf/dev/libraries/VRFV2PlusClient.sol";
 
 contract Raffle is VRFConsumerBaseV2Plus {
-    error Raffle__NotEnoughEth(uint256 sent, uint256 required);
+    error Raffle__NotEnoughEth();
     error Raffle__NotEnoughTimeElapsed(uint256 elapsed, uint256 required);
-    error Raffle__TransferFailed(address winner, uint256 amount);
+    error Raffle__TransferFailed();
     error Raffle__RaffleNotOpen();
     error Raffle__UpkeepNotNeeded(uint256 balance, uint256 playersCount, uint256 raffleState);
 
@@ -35,7 +35,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
     uint256 private s_lastTimestamp;
     RaffleState private s_raffleState;
 
-    event RafflEntered(address indexed player);
+    event RaffleEntered(address indexed player);
     event WinnerPicked(address indexed winner);
 
     constructor(
@@ -59,13 +59,13 @@ contract Raffle is VRFConsumerBaseV2Plus {
 
     function enterRaffle() external payable {
         if (msg.value < i_entranceFee) {
-            revert Raffle__NotEnoughEth(msg.value, i_entranceFee);
+            revert Raffle__NotEnoughEth();
         }
         if (s_raffleState != RaffleState.OPEN) {
             revert Raffle__RaffleNotOpen();
         }
         s_players.push(payable(msg.sender));
-        emit RafflEntered(msg.sender);
+        emit RaffleEntered(msg.sender);
     }
 
     function checkUpkeep(bytes memory /* checkData */ )
@@ -110,11 +110,19 @@ contract Raffle is VRFConsumerBaseV2Plus {
 
         (bool success,) = winner.call{value: address(this).balance}("");
         if (!success) {
-            revert Raffle__TransferFailed(winner, address(this).balance);
+            revert Raffle__TransferFailed();
         }
     }
 
-    function getEntranceFee() public view returns (uint256) {
+    function getEntranceFee() external view returns (uint256) {
         return i_entranceFee;
+    }
+
+    function getRaffleState() external view returns (RaffleState) {
+        return s_raffleState;
+    }
+
+    function getPlayer(uint256 indexOfPlayer) external view returns (address payable) {
+        return s_players[indexOfPlayer];
     }
 }
