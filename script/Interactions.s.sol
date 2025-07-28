@@ -34,7 +34,7 @@ contract CreateSubscription is Script {
 }
 
 contract FundSubscription is Script, CodeConstants {
-    uint256 public constant SUBSCRIPTION_AMOUNT = 3 ether;
+    uint256 public constant SUBSCRIPTION_AMOUNT = 15 ether;
 
     function fundSubscriptionUsingConfig() internal {
         HelperConfig helperConfig = new HelperConfig();
@@ -54,7 +54,7 @@ contract FundSubscription is Script, CodeConstants {
         if (block.chainid == LOCAL_CHAIN_ID) {
             vm.startBroadcast();
             VRFCoordinatorV2_5Mock vrfCoordinatorMock = VRFCoordinatorV2_5Mock(vrfCoordinator);
-            vrfCoordinatorMock.fundSubscription(subId, SUBSCRIPTION_AMOUNT * 100);
+            vrfCoordinatorMock.fundSubscription(subId, SUBSCRIPTION_AMOUNT * 15);
             vm.stopBroadcast();
             console.log("Subscription funded with amount: ", SUBSCRIPTION_AMOUNT);
         } else if (block.chainid == ETH_SEPOLIA_CHAIN_ID) {
